@@ -1,7 +1,7 @@
 /**
- * Author : 
- * Date : 
- * Description : 
+ * Author : Nathan Lafont
+ * Date : 04.24.2025
+ * Description : Webmap's script
  */
 
 var map_ol = null;
@@ -39,7 +39,7 @@ function style_fp(feature){
 
 var source_fp = new ol.source.Vector({
     format : new ol.format.GeoJSON(),
-    url : "../data/geojson/french_polynesia.geojson"
+    url : "../data/reef_passages/french_polynesia.geojson"
 });
 
 source_fp._title = "French Polynesia reef passages";
@@ -49,12 +49,11 @@ var layer_fp = new ol.layer.Vector({
     source : source_fp,
     style : style_fp
 });
-//Set name pour retrouver la couche plus tard.
+// Set name to refer to it later
 layer_fp.set('name', 'fp');
 
 
 // Basemap layer
-
 var bglayer = new ol.layer.Tile({
     source: new ol.source.XYZ({ 
         url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
@@ -68,11 +67,11 @@ window.onload = function () {
     map_sdk = Gp.Map.load(
         "map",
         {
-            //clef(s) d'accès à la plateforme. 
-            //En fonction de la valeur permet d'accèder à différentes choses sur GP
+            // Acess keys
+            //En fonction de la valeur permet d'accèder à différentes choses sur GeoPortail
             apiKey: "cartes,essentiels",
 
-            //centrage automatique de la carte
+            // Init map center
             center: {
                 x: -149.5322,
                 y: -17.6512,
@@ -81,20 +80,7 @@ window.onload = function () {
                 projection : "CRS:84"
             },
 
-            //Zoom de 1 à 21
             zoom: 10,
-
-            //Renseigner les couches
-            // layersOptions : {
-
-            //     "osm" : {
-            //         title : "OSM",
-            //         description :"OpenStreetMap",
-            //         format: "osm",
-            //         url: "https://a.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png",
-            //         position: 1,
-            //     },
-            // },
 
             // Control options
             controlsOptions: {
@@ -102,6 +88,7 @@ window.onload = function () {
                 "search": {
                     maximised: true
                 },
+                // Layer Switcher
                 "layerSwitcher" : {}
             },
 

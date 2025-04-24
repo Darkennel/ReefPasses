@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<!-- 
+    Author : Nathan Lafont
+    Date : 04.23.2025
+    Description : main html file
+    Html codestitch Source : https://www.codestitch.app/app?page=1
+-->
+
+    <head>
+
+        <title> Reef passages | Webmap </title>
+
+        <!-- Librairie OpenLayers -->
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.15.1/css/ol.css" />
+        <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.15.1/build/ol.js"></script>
+
+        <!-- Extension Géoportail pour OpenLayers-->
+        <link rel="stylesheet" href="https://ignf.github.io/geoportal-sdk/latest/dist/2d/GpSDK2D.css" />
+        <!--lien vers le fichier autoconf en local-->
+        <script src="https://ignf.github.io/geoportal-sdk/latest/dist/2d/GpSDK2D.js">
+        </script>
+
+        <link rel="stylesheet" type="text/css" href="css/map.css"/>
+
+    </head>
+
+    <body>
+
+        <div class="header-img">
+            <img src="media/layout/socpacific1.webp" height="86px"/>
+        </div>
+
+        <!-- ============================================ -->
+        <!--                     NAV                      -->
+        <!-- ============================================ -->
+
+        <nav>
+            <ul>
+                <li><a href="#webmap">Webmap</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+
+        <!-- ============================================ -->
+        <!--                   WEBMAP                     -->
+        <!-- ============================================ -->
+
+        <section id="webmap">
+
+            <div class="cs-container">
+                
+                <div class="cs-content">
+                    <h2 class="cs-title">Reef passages in South Pacific Ocean</h2>
+                    <div class="cs-flex">
+                        <p class="cs-text">Quick summary about the project that goes not so long in details about SOCPacific2R. Maybe include some details about the webmap?</p>
+                        <a href="https://socpacific.link/" class="cs-button-solid">Read More about SOCPacific2R</a>
+                    </div>
+                </div>
+                
+                <!-- Add Webmap -->
+                <picture class="cs-picture">
+
+                    <div id="map"></div>
+
+                </picture>
+
+                <!-- Create a pop up panel from webmap -->
+                <div id="fixed-panel" class="fixed-panel">
+
+                    <!-- Panel closer button -->
+                    <button id="panel-closer" class="panel-closer">✖</button>
+                    <h2>Details</h2>
+                
+                    <!-- Panel content -->
+                    <div id="panel-content"></div>
+
+                </div>
+
+                <div class="cs-text">
+                    You think that you have something interesting to share with us about a reef passage? like a specific role, value or even a specific nature?
+                    Then please head to the <a href="#contact">contact</a> section and write us an email.
+                </div>
+            </div> 
+
+        </section>
+
+
+
+        <!-- ============================================ -->
+        <!--                   CONTACT                    -->
+        <!-- ============================================ -->
+
+        <section id="contact">
+            <div class="cs-container">
+                <div class="cs-form-group">
+                    <div class="cs-content">
+                        <span class="cs-topper">Get in Touch</span>
+                        <h2 class="cs-title">Contact Us</h2>
+                    </div>
+
+                    <!--Form-->
+                    <form class="cs-form" id="cs-form" name="Contact Form" method="post">
+                        <label class="cs-label">
+                            Name *
+                            <input class="cs-input" required type="text" id="name" name="name" placeholder="John Doe">
+                        </label>
+                        <label class="cs-label cs-email">
+                            Email *
+                            <input class="cs-input" required type="email" id="email" name="email" placeholder="name@company.com">
+                        </label>
+                        <label class="cs-label cs-phone">
+                            Phone
+                            <input class="cs-input" type="tel" id="phone" name="phone" placeholder="+1 (206) 987-6543">
+                        </label>
+                        <label class="cs-label">
+                            Message *
+                            <textarea class="cs-input cs-textarea" required name="Message" id="message" placeholder="Hello, I would like to report"></textarea>
+                        </label>
+                        <button class="cs-button-solid cs-submit" type="submit">Send Message</button>
+                    </form>
+                </div>
+
+                <!--Contact Info-->
+                <div class="cs-info-group">
+                    <div class="cs-info">
+                        <span class="cs-topper">Location</span>
+                        <span class="cs-detail">Adress 1<br>City adress 1</span>
+                    </div>
+                    <div class="cs-info">
+                        <span class="cs-topper">Contact</span>
+                        <span class="cs-detail">Phone: +99 40 70 929</span>
+                        <span class="cs-detail">E-mail: info@company.com</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+                                        
+
+        <script src="../../javascript/map.js"></script>
+
+
+        <!-- INSTALL EmailJS package -->
+        <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
+        <script type="text/javascript">
+        (function(){
+            emailjs.init("nnw-c60c9M2kg4_j0"); // Replace YOUR_USER_ID with the one generated on email.js
+        })();
+        </script>
+
+        <script>
+            document.getElementById("cs-form").addEventListener("submit", function(e) {
+                e.preventDefault();
+            
+                emailjs.send("service_e90n6vg", "template_kf5tm98", {
+                    from_name: document.getElementById("name").value,
+                    from_email: document.getElementById("email").value,
+                    phone: document.getElementById("phone").value,
+                    message: document.getElementById("message").value
+                }).then(
+                    function(response) {
+                        alert("Message sent successfully!");
+                        document.getElementById("cs-form").reset();
+                    },
+                    function(error) {
+                        alert("Failed to send message. Please try again.");
+                        console.log("FAILED...", error);
+                    }
+                );
+            });
+        </script>
+
+    </body>
+</html>                     

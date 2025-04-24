@@ -91,6 +91,7 @@ nav ul {
   list-style-type: none;
   justify-content: center;
   display: flex;
+  margin : 0 auto;  
 }
 
 nav ul li {

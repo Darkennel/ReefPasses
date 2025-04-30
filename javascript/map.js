@@ -39,7 +39,7 @@ function style_fp(feature){
 
 var source_fp = new ol.source.Vector({
     format : new ol.format.GeoJSON(),
-    url : "../data/reef_passages/french_polynesia.geojson"
+    url : "data/reef_passages/french_polynesia.geojson"
 });
 
 source_fp._title = "French Polynesia reef passages";

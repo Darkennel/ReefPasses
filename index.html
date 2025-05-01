@@ -59,23 +59,25 @@
                         <a href="https://socpacific.link/" class="cs-button-solid">Read More about SOCPacific2R</a>
                     </div>
                 </div>
+
+                <button class="cs-button-solid" onclick="fullScreenView()" style="margin-bottom:10px;">Full screen webmap</button>
                 
                 <!-- Add Webmap -->
-                <picture class="cs-picture">
+                <div class="cs-picture" id="cs-picture">
 
                     <div id="map"></div>
 
-                </picture>
+                    <!-- Create a pop up panel from webmap -->
+                    <div id="fixed-panel" class="fixed-panel">
 
-                <!-- Create a pop up panel from webmap -->
-                <div id="fixed-panel" class="fixed-panel">
+                        <!-- Panel closer button -->
+                        <button id="panel-closer" class="panel-closer">✖</button>
+                        <h2>Details</h2>
+                        
+                        <!-- Panel content -->
+                        <div id="panel-content"></div>
 
-                    <!-- Panel closer button -->
-                    <button id="panel-closer" class="panel-closer">✖</button>
-                    <h2>Details</h2>
-                
-                    <!-- Panel content -->
-                    <div id="panel-content"></div>
+                    </div>
 
                 </div>
 
@@ -139,9 +141,7 @@
 
         </section>
                                         
-
         <script src="javascript/map.js"></script>
-
 
         <!-- Installs EmailJS package -->
         <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>

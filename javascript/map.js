@@ -11,7 +11,7 @@ const white = [255, 255, 255, 1];
 const blue = [0, 153, 255, 1];
 
 
-// ------------------------------> Styling reef passages
+// ------------------------------> Vector Layers
 
 //---------- STYLE ----------
 
@@ -53,13 +53,16 @@ var layer_fp = new ol.layer.Vector({
 layer_fp.set('name', 'fp');
 
 
-// Basemap layer
-var bglayer = new ol.layer.Tile({
-    source: new ol.source.XYZ({ 
-        url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-   }) 
-});
 
+// ------------------------------> Basemap Layers
+
+// var bglayer = new ol.layer.Tile({
+//     source: new ol.source.XYZ({
+//         url: 'https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+//         attributions: '© OpenStreetMap contributors, © CartoDB'
+//     })
+// });
+// bglayer.set('name', 'BaseLayer');
 
 // ------------------------------> INIT MAP
 window.onload = function () {
@@ -100,7 +103,6 @@ window.onload = function () {
     );
 }
 
-
 //---------------------------------------------------> PANEL
 
 /*Panel elements*/
@@ -120,8 +122,6 @@ function showPanel(content) {
 panelCloser.onclick = function () {
     fixedPanel.classList.remove('visible');
 };
-
-map_sdk.addLayer(bglayer);
 
 // ------------------------------> INIT MAP
 
@@ -172,10 +172,24 @@ function after_init_map(){
     });
 
     map.addLayer(layer_fp);
+
+    //map.addLayer(bglayer);
 }
+
+
 
 function refresh_view() {
     //mettre ici toutes les couches à raffraîchir
     source_fp.refresh();
     overlay.changed();
 }
+
+
+function fullScreenView() {
+    const fs = document.getElementById('cs-picture');
+    fs.requestFullscreen().catch((err) => {
+        console.error("Fullscreen error:", err);
+    });
+}
+
+

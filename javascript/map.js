@@ -186,10 +186,17 @@ function refresh_view() {
 
 
 function fullScreenView() {
-    const fs = document.getElementById('cs-picture');
-    fs.requestFullscreen().catch((err) => {
-        console.error("Fullscreen error:", err);
-    });
+    const mapElement = document.getElementById("cs-picture");
+
+    if (mapElement.requestFullscreen) {
+      mapElement.requestFullscreen();
+    } else if (mapElement.webkitRequestFullscreen) { // Safari
+      mapElement.webkitRequestFullscreen();
+    } else if (mapElement.msRequestFullscreen) { // IE11
+      mapElement.msRequestFullscreen();
+    }
 }
+
+
 
 

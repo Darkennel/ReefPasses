@@ -623,3 +623,34 @@ nav a:hover {
 }
 }
                               
+:fullscreen {
+  background: #000; /* ou autre couleur pour l'effet plein écran */
+}
+
+:-webkit-full-screen {
+  background: #000;
+}
+
+:-moz-full-screen {
+  background: #000;
+}
+
+#map:fullscreen {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999;
+}
+
+#webmap .cs-picture:fullscreen {
+  width: 100vw !important;
+  height: 100vh !important;
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+}

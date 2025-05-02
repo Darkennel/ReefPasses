@@ -119,7 +119,7 @@
                         </label>
                         <label class="cs-label">
                             Message *
-                            <textarea class="cs-input cs-textarea" required name="Message" id="message" placeholder="Hello, I would like to report"></textarea>
+                            <textarea class="cs-input cs-textarea" required name="message" id="message" placeholder="Hello, I would like to report"></textarea>
                         </label>
                         <button class="cs-button-solid cs-submit" type="submit">Send Message</button>
                     </form>
@@ -144,34 +144,37 @@
         <script src="javascript/map.js"></script>
 
         <!-- Installs EmailJS package -->
-        <script type="text/javascript" src="https://cdn.emailjs.com/dist/email.min.js"></script>
-        <script type="text/javascript">
-        (function(){
-            emailjs.init("nnw-c60c9M2kg4_j0"); // Replace YOUR_USER_ID with the one generated on email.js
-        })();
-        </script>
+        <!-- EmailJS SDK (version compatible) -->
+        <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
         <script>
-            document.getElementById("cs-form").addEventListener("submit", function(e) {
-                e.preventDefault();
-            
-                emailjs.send("service_e90n6vg", "template_kf5tm98", {
-                    from_name: document.getElementById("name").value,
-                    from_email: document.getElementById("email").value,
-                    phone: document.getElementById("phone").value,
-                    message: document.getElementById("message").value
-                }).then(
-                    function(response) {
-                        alert("Message sent successfully!");
-                        document.getElementById("cs-form").reset();
-                    },
-                    function(error) {
-                        alert("Failed to send message. Please try again.");
-                        console.log("FAILED...", error);
-                    }
-                );
-            });
+        // Initialise EmailJS
+        (function(){
+            emailjs.init("nnw-c60c9M2kg4_j0"); // remplace par ta clé publique
+        })();
+
+        // Gestion du formulaire
+        document.getElementById("cs-form").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            emailjs.send("service_e90n6vg", "template_kf5tm98", {
+                from_name: document.getElementById("name").value,
+                from_email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+                message: document.getElementById("message").value
+            }).then(
+                function(response) {
+                    alert("Message envoyé avec succès !");
+                    document.getElementById("cs-form").reset();
+                },
+                function(error) {
+                    alert("Échec de l'envoi du message. Merci de réessayer.");
+                    console.error("Erreur d'envoi :", error);
+                }
+            );
+        });
         </script>
+
 
     </body>
 </html>                     

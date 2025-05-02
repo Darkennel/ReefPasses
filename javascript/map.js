@@ -4,12 +4,10 @@
  * Description : Webmap's script
  */
 
-var map_ol = null;
 var map_sdk = null;
 
 const white = [255, 255, 255, 1];
 const blue = [0, 153, 255, 1];
-
 
 // ------------------------------> Vector Layers
 

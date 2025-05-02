@@ -23,15 +23,22 @@
         <script src="https://ignf.github.io/geoportal-sdk/latest/dist/2d/GpSDK2D.js">
         </script>
 
+        <link rel="stylesheet" type="text/css" href="css/css.css"/>
         <link rel="stylesheet" type="text/css" href="css/map.css"/>
+        <link rel="stylesheet" type="text/css" href="css/contact.css"/>
 
     </head>
 
     <body>
 
+        <!-- ============================================ -->
+        <!--                   HEADER                     -->
+        <!-- ============================================ -->
+
         <div class="header-img">
             <img src="media/layout/socpacific1.webp" height="85px"/>
         </div>
+
 
         <!-- ============================================ -->
         <!--                     NAV                      -->
@@ -43,6 +50,7 @@
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
+
 
         <!-- ============================================ -->
         <!--                   WEBMAP                     -->
@@ -60,14 +68,13 @@
                     </div>
                 </div>
 
-                <button id="computer-func" onclick="fullScreenView()" style="margin-bottom:10px;">
+                <button id="computer-func" class="cs-button-solid" onclick="fullScreenView()" style="margin-bottom:10px;">
                     Full screen webmap
                 </button>
                   
-                <button id="mobile-func" href="./html/mobile_map.html" target="_blank" style="margin-bottom:10px;">
+                <a  href="./html/mobile_map.html" class="cs-button-solid" id="mobile-func" target="_blank" style="margin-bottom:10px;">
                     Open webmap in new tab
-                </button>
-
+                </a>
 
                 <!-- Add Webmap -->
                 <div class="cs-picture" id="cs-picture">
@@ -95,7 +102,6 @@
             </div> 
 
         </section>
-
 
 
         <!-- ============================================ -->
@@ -147,10 +153,14 @@
             </div>
 
         </section>
-                                        
+                     
+        
+        <!-- ============================================ -->
+        <!--                    SCRIPTS                   -->
+        <!-- ============================================ -->
+
         <script src="javascript/map.js"></script>
 
-        <!-- Installs EmailJS package -->
         <!-- EmailJS SDK (GitHub Pages compatibility) -->
         <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
@@ -181,7 +191,6 @@
             );
         });
         </script>
-
 
     </body>
 </html>                     

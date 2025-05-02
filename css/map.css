@@ -166,6 +166,10 @@
     background-color: var(--secondary);
     color: #fff;
   }
+  #webmap .cs-button-main:hover {
+    background-color: var(--secondary);
+    color: #fff;
+  }
   #webmap .cs-picture {
     width: 100%;
     margin-bottom: clamp(1rem, 2vw, 1.25rem);

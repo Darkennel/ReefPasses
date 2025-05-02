@@ -4,10 +4,12 @@
  * Description : Webmap's script
  */
 
+var map_ol = null;
 var map_sdk = null;
 
 const white = [255, 255, 255, 1];
 const blue = [0, 153, 255, 1];
+
 
 // ------------------------------> Vector Layers
 
@@ -33,8 +35,9 @@ function style_fp(feature){
 
 //---------- PROPERTIES ----------
 
-// "reef passages" properties
+// "reef passages" properties 
 
+// French Polynesia
 var source_fp = new ol.source.Vector({
     format : new ol.format.GeoJSON(),
     url : "data/reef_passages/french_polynesia.geojson"
@@ -50,17 +53,39 @@ var layer_fp = new ol.layer.Vector({
 // Set name to refer to it later
 layer_fp.set('name', 'fp');
 
+// Fiji
+
+var source_fiji = new ol.source.Vector({
+    format : new ol.format.GeoJSON(),
+    url : "data/reef_passages/PassesFiji.geojson"
+});
+
+source_fiji._title = "Fiji reef passages";
+source_fiji._description = "Reef passages overFiji archipel";
+
+var layer_fiji = new ol.layer.Vector({
+    source : source_fiji,
+    style : style_fp
+});
+// Set name to refer to it later
+layer_fiji.set('name', 'fiji');
+
+
 
 
 // ------------------------------> Basemap Layers
 
-// var bglayer = new ol.layer.Tile({
-//     source: new ol.source.XYZ({
-//         url: 'https://{a-c}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-//         attributions: '© OpenStreetMap contributors, © CartoDB'
-//     })
-// });
-// bglayer.set('name', 'BaseLayer');
+var source_bg = new ol.source.XYZ({
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attributions: 'Tiles © Esri — Source: Esri, HERE, Garmin, FAO, NOAA, USGS',
+    wrapX: false
+});
+
+source_bg._title = 'Esri BackGround';
+var bglayer = new ol.layer.Tile({
+    source: source_bg
+});
+
 
 // ------------------------------> INIT MAP
 window.onload = function () {
@@ -125,6 +150,16 @@ panelCloser.onclick = function () {
 
 function after_init_map(){
     map = map_sdk.getLibMap();
+
+       // Supprimer toutes les couches de fond (hors couches vectorielles ou rasters ajoutées ensuite)
+       const layersToRemove = [];
+       map.getLayers().forEach(function(layer) {
+           if (layer instanceof ol.layer.Tile || layer instanceof ol.layer.Image) {
+               layersToRemove.push(layer);
+           }
+       });
+       layersToRemove.forEach(layer => map.removeLayer(layer));
+   
     // map.addOverlay(overlay);
 
     map.on('click', function (evt) {
@@ -142,7 +177,7 @@ function after_init_map(){
             let content ='';
 
             // Vérification de la couche cliquée et affichage du pop-up
-            if (layer.get('name') === "fp") {
+            if (["fp", "fiji"].includes(layer.get('name'))) {
                 console.log(layer.get('name'));
                 //Contenu du paneau
                 content = `
@@ -168,8 +203,9 @@ function after_init_map(){
             fixedPanel.classList.remove('visible'); //Hide if no feature clicked
         }
     });
-
+    map.addLayer(bglayer);
     map.addLayer(layer_fp);
+    map.addLayer(layer_fiji);
 
     //map.addLayer(bglayer);
 }

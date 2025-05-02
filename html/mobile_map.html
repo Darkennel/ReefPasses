@@ -30,6 +30,11 @@
 
     <body>
 
+
+        <!-- ============================================ -->
+        <!--                   WEBMAP                     -->
+        <!-- ============================================ -->
+
         <div id="map"></div>
 
         <!-- Create a pop up panel from webmap -->
@@ -43,6 +48,11 @@
             <div id="panel-content"></div>
         
         </div>
+
+
+        <!-- ============================================ -->
+        <!--                    SCRIPTS                   -->
+        <!-- ============================================ -->
 
         <script>
 
@@ -227,7 +237,7 @@
                     } else {
                         // Masquer l'overlay si aucun élément n'est cliqué
                         // overlay.setPosition(undefined);
-
+                        
                         fixedPanel.classList.remove('visible'); //Hide if no feature clicked
                     }
                 });

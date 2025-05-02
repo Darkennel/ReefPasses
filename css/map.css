@@ -105,7 +105,7 @@
     text-decoration: underline;
   }
   
-  #webmap .cs-button-solid {
+  #webmap .cs-button-main {
     font-size: 1rem;
     font-weight: 700;
     /* 46px - 56px */
@@ -126,11 +126,33 @@
     transition: background-color 0.3s;
   }
 
+  #webmap .cs-button-solid {
+    font-size: 1rem;
+    font-weight: 700;
+    /* 46px - 56px */
+    line-height: clamp(2.875rem, 5.5vw, 3.5rem);
+    text-align: center;
+    text-decoration: none;
+    min-width: 9.375rem;
+    margin: 0;
+    box-sizing: border-box;
+    /* 32px - 48px */
+    padding: 0 clamp(2rem, 4vw, 3rem);
+    background-color: var(--primary);
+    color: var(--bodyTextColorWhite);
+    /* display: inline-block; */
+    position: relative;
+    z-index: 1;
+    transition: color 0.3s;
+    transition: background-color 0.3s;
+  }
+
+
   #mobile-func{
     display: inline-block;
   }
   #computer-func{
-    display: none;
+    display: none; 
   }
 
   #webmap .cs-button-solid:hover {
@@ -213,7 +235,6 @@
   }
 }
 
-
 /* Tablet - 768px */
 @media only screen and (min-width: 48rem) {
   #webmap .cs-text {
@@ -228,7 +249,6 @@
   
 }
 
-
 /* Small Desktop - 1024px */
 @media only screen and (min-width: 64rem) {
   #webmap .cs-content {
@@ -241,11 +261,9 @@
   #webmap .cs-item {
     grid-column: span 3;
   }
-
   #mobile-func{
     display: none;
   }
-
   #computer-func{
     display: inline-block;
   }
@@ -271,18 +289,6 @@
     width: 50%;
     max-width: 39.375rem;
   }
-}
-
-:fullscreen {
-  background: #000; /* ou autre couleur pour l'effet plein écran */
-}
-
-:-webkit-full-screen {
-  background: #000;
-}
-
-:-moz-full-screen {
-  background: #000;
 }
 
 #map:fullscreen {

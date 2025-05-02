@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<!-- 
+    Author : Nathan Lafont
+    Date : 04.23.2025
+    Description : main html file
+    Html codestitch Source : https://www.codestitch.app/app?page=1
+-->
+
+    <head>
+
+        <title> Reef passages | Webmap </title>
+
+        <!-- Librairie OpenLayers -->
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.15.1/css/ol.css" />
+        <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v6.15.1/build/ol.js"></script>
+
+        <!-- Extension Géoportail pour OpenLayers-->
+        <link rel="stylesheet" href="https://ignf.github.io/geoportal-sdk/latest/dist/2d/GpSDK2D.css" />
+        <!--lien vers le fichier autoconf en local-->
+        <script src="https://ignf.github.io/geoportal-sdk/latest/dist/2d/GpSDK2D.js">
+        </script>
+
+        <link rel="stylesheet" type="text/css" href="css/map.css"/>
+
+    </head>
+
+    <body>
+
+        <div id="map"></div>
+
+        <!-- Create a pop up panel from webmap -->
+        <div id="fixed-panel" class="fixed-panel">
+
+            <!-- Panel closer button -->
+            <button id="panel-closer" class="panel-closer">✖</button>
+            <h2>Details</h2>
+                
+            <!-- Panel content -->
+            <div id="panel-content"></div>
+
+        </div>
+
+    </body>

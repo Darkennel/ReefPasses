@@ -25,7 +25,7 @@
       margin: auto;
       background-color: #fff;
       display: flex;
-      flex-direction: column;
+      /* flex-direction: column; */
       justify-content: center;
       align-items: stretch;
       /* 48px - 64px */

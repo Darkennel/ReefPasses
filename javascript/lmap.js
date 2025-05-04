@@ -1,11 +1,20 @@
 /**
- * Author : Nathan Lafont
+ * Authors : Nathan Lafont & Samuel Martin
  * Date : 04.24.2025
  * Description : Webmap's script
  */
 
 
-var map = L.map('reef_passes', { center: [149.5322,-17.6512], zoom: 10 });
+window.onload = function () {
+    var map = L.map('map').setView([-17.6512, -149.5322], 10);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Appel d’une fonction une fois la carte chargée
+    map.whenReady(after_init_map);
+};
 
 var baselayers = {
     ESRI: new L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'),
@@ -19,11 +28,11 @@ L.control.layers(baselayers, null, { position: 'topright' }, { collapsed: false 
 
 L.control.scale({ position: 'bottomleft' }).addTo(map);
 
-var geojson = L.geoJson(french_polynesia,
-    {
-        style: style,
-        onEachFeature: onEachFeature
-    }).addTo(mymap);
+function onEachFeature(feature, layer) {
+    if (feature.properties && feature.properties.Name) {
+        layer.bindPopup("<strong>Nom : </strong>" + feature.properties.Name);
+    }
+}
 
 function style(feature) {
     return {
@@ -43,6 +52,11 @@ function getColor(d) {
                 '#AAA28D'; // Undefined
 }
 
+var french_polynesia = new L.GeoJSON.AJAX("../data/reef_passages/french_polynesia.geojson", {
+    style: style,
+    onEachFeature: onEachFeature
+}).addTo(map);
+
 var legend = L.control({ position: 'bottomright' });
 
 // legend.onAdd = function (map) {
@@ -61,13 +75,13 @@ var legend = L.control({ position: 'bottomright' });
 //     return div;
 // };
 
-legend.addTo(mymap);
+legend.addTo(map);
 
 
-var info = L.control();
+// var info = L.control();
 
-info.onAdd = function (map) {
-    this._div = L.DomUtil.create('div', 'info');
-    this.update();
-    return this._div;
-};
+// info.onAdd = function (map) {
+//     this._div = L.DomUtil.create('div', 'info');
+//     this.update();
+//     return this._div;
+// };

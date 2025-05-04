@@ -1,5 +1,5 @@
 /**
- * Author : Nathan Lafont
+ * Authors : Nathan Lafont & Samuel Martin
  * Date : 04.24.2025
  * Description : Webmap's script
  */
@@ -11,18 +11,34 @@ const white = [255, 255, 255, 1];
 const blue = [0, 153, 255, 1];
 
 
-// ------------------------------> Vector Layers
+// -----------------------------------
+// ---------- VECTOR LAYERS ----------
+// -----------------------------------
 
-//---------- STYLE ----------
+// ---------- STYLE
 
-function style_fp(feature){
+// Allows to define device-based behaviour or symbology
+const page = document.body.dataset.page;
+var dotsize = 5;
+if(page == "mobile-page"){
+    console.log("Page détectée :", page);
+    dotsize = 15;
+}
 
+function getColor(d) {
+    return d == 'Lagoon' ? '#15210D' : // Lagoon
+        d == 'Coastal' ? '#353C1A' : // Coastal
+            d = 'Open Water' ? '#605D30' : // Open Water
+                '#AAA28D'; // Undefined
+}
+
+function style_rf(feature){
     return[
         new ol.style.Style({
             image: new ol.style.Circle({
-                radius : 5,
+                radius : dotsize,
                 fill: new ol.style.Fill({
-                    color: blue,
+                    color: getColor(feature.get("Type")),
                 }),
                 stroke: new ol.style.Stroke({
                     color: white,
@@ -33,11 +49,9 @@ function style_fp(feature){
     ]
 }
 
-//---------- PROPERTIES ----------
+// ---------- PROPERTIES
+// ----- French Polynesia
 
-// "reef passages" properties 
-
-// French Polynesia
 var source_fp = new ol.source.Vector({
     format : new ol.format.GeoJSON(),
     url : "data/reef_passages/french_polynesia.geojson"
@@ -48,12 +62,12 @@ source_fp._description = "Reef passages over Moorea and Tahiti (French Polynesia
 
 var layer_fp = new ol.layer.Vector({
     source : source_fp,
-    style : style_fp
+    style : style_rf
 });
 // Set name to refer to it later
 layer_fp.set('name', 'fp');
 
-// Fiji
+// ----- Fiji
 
 var source_fiji = new ol.source.Vector({
     format : new ol.format.GeoJSON(),
@@ -65,15 +79,15 @@ source_fiji._description = "Reef passages overFiji archipel";
 
 var layer_fiji = new ol.layer.Vector({
     source : source_fiji,
-    style : style_fp
+    style : style_rf
 });
 // Set name to refer to it later
 layer_fiji.set('name', 'fiji');
 
 
-
-
-// ------------------------------> Basemap Layers
+// -----------------------------------
+// --------- BASEMAP LAYERS ----------
+// -----------------------------------
 
 var source_bg = new ol.source.XYZ({
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
@@ -87,16 +101,15 @@ var bglayer = new ol.layer.Tile({
 });
 
 
-// ------------------------------> INIT MAP
+// -----------------------------------
+// ------------- INIT MAP ------------
+// -----------------------------------
+
 window.onload = function () {
 
     map_sdk = Gp.Map.load(
         "map",
         {
-            // Acess keys
-            //En fonction de la valeur permet d'accèder à différentes choses sur GeoPortail
-            apiKey: "cartes,essentiels",
-
             // Init map center
             center: {
                 x: -149.5322,
@@ -105,9 +118,7 @@ window.onload = function () {
                 // ,
                 projection : "CRS:84"
             },
-
             zoom: 10,
-
             // Control options
             controlsOptions: {
                 // Search Bar
@@ -117,7 +128,6 @@ window.onload = function () {
                 // Layer Switcher
                 "layerSwitcher" : {}
             },
-
             mapEventsOptions: {
                 // Functions after map initalisation
                 "mapLoaded": after_init_map
@@ -126,7 +136,10 @@ window.onload = function () {
     );
 }
 
-//---------------------------------------------------> PANEL
+
+// -----------------------------------
+// -------------- PANEL --------------
+// -----------------------------------
 
 /*Panel elements*/
 const fixedPanel = document.getElementById('fixed-panel');
@@ -146,19 +159,22 @@ panelCloser.onclick = function () {
     fixedPanel.classList.remove('visible');
 };
 
-// ------------------------------> INIT MAP
+
+// -----------------------------------
+// ---- AFTER INIT MAP FUNCTIONS -----
+// -----------------------------------
 
 function after_init_map(){
     map = map_sdk.getLibMap();
 
-       // Supprimer toutes les couches de fond (hors couches vectorielles ou rasters ajoutées ensuite)
-       const layersToRemove = [];
-       map.getLayers().forEach(function(layer) {
-           if (layer instanceof ol.layer.Tile || layer instanceof ol.layer.Image) {
-               layersToRemove.push(layer);
-           }
-       });
-       layersToRemove.forEach(layer => map.removeLayer(layer));
+    // Clear all base map layers
+    const layersToRemove = [];
+    map.getLayers().forEach(function(layer) {
+        if (layer instanceof ol.layer.Tile || layer instanceof ol.layer.Image) {
+           layersToRemove.push(layer);
+        }
+    });
+    layersToRemove.forEach(layer => map.removeLayer(layer));
    
     // map.addOverlay(overlay);
 
@@ -170,16 +186,16 @@ function after_init_map(){
         if (result && result.feature && result.layer) {
             var feature = result.feature;
             var layer = result.layer;
-            // Calcul du centroïde de la géométrie de la feature cliquée
-            var geometry = feature.getGeometry();
-            var centroid = ol.extent.getCenter(geometry.getExtent());
+            // Centroid for pop-up purpose
+            // var geometry = feature.getGeometry();
+            // var centroid = ol.extent.getCenter(geometry.getExtent());
 
             let content ='';
 
-            // Vérification de la couche cliquée et affichage du pop-up
+            // Checked which layer is clicked 
             if (["fp", "fiji"].includes(layer.get('name'))) {
                 console.log(layer.get('name'));
-                //Contenu du paneau
+                // Set panel content
                 content = `
                 <div class="layer-content">
                     <h3>Passage ${feature.get('ID')}</h3>
@@ -192,12 +208,12 @@ function after_init_map(){
                 `;
             }
 
-            // Positionnement de l'overlay au centroïde de la feature
+            // Sets overlay to feature's centroid
             // overlay.setPosition(centroid);
             showPanel(content);
 
         } else {
-            // Masquer l'overlay si aucun élément n'est cliqué
+            // Hide overlay if nothing is clicked
             // overlay.setPosition(undefined);
 
             fixedPanel.classList.remove('visible'); //Hide if no feature clicked
@@ -211,13 +227,20 @@ function after_init_map(){
 }
 
 
+// -----------------------------------
+// ----------- REFRESH VIEW ----------
+// -----------------------------------
 
 function refresh_view() {
-    //mettre ici toutes les couches à raffraîchir
+    // Every layers that mays need to be refreshed after an event
     source_fp.refresh();
     overlay.changed();
 }
 
+
+// -----------------------------------
+// --------- FULLSCREEN VIEW ---------
+// -----------------------------------
 
 function fullScreenView() {
     const mapElement = document.getElementById("cs-picture");

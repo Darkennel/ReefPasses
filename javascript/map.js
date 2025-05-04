@@ -20,13 +20,13 @@ const blue = [0, 153, 255, 1];
 // Allows to define device-based behaviour or symbology
 const page = document.body.dataset.page;
 var dotsize = 5;
-var urlpf = "data/reef_passages/french_polynesia.geojson";
+var urlfp = "data/reef_passages/french_polynesia.geojson";
 var urlf = "data/reef_passages/PassesFiji.geojson";
 
 if(page == "mobile-page"){
     console.log("Page détectée :", page);
     dotsize = 15;
-    urlpf = "../data/reef_passages/french_polynesia.geojson";
+    urlfp = "../data/reef_passages/french_polynesia.geojson";
     urlf = "../data/reef_passages/PassesFiji.geojson";
 }
 
@@ -59,7 +59,7 @@ function style_rf(feature){
 
 var source_fp = new ol.source.Vector({
     format : new ol.format.GeoJSON(),
-    url : "data/reef_passages/french_polynesia.geojson"
+    url : urlfp
 });
 
 source_fp._title = "French Polynesia reef passages";
@@ -76,7 +76,7 @@ layer_fp.set('name', 'fp');
 
 var source_fiji = new ol.source.Vector({
     format : new ol.format.GeoJSON(),
-    url : "data/reef_passages/PassesFiji.geojson"
+    url : urlf
 });
 
 source_fiji._title = "Fiji reef passages";

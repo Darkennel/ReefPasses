@@ -7,9 +7,9 @@
 var map_ol = null;
 var map_sdk = null;
 
-const white = [255, 255, 255, 1];
-const blue = [0, 153, 255, 1];
+let previouslySelected = null;
 
+const white = [255, 255, 255, 1];
 
 // -----------------------------------
 // ---------- VECTOR LAYERS ----------
@@ -20,12 +20,14 @@ const blue = [0, 153, 255, 1];
 // Allows to define device-based behaviour or symbology
 const page = document.body.dataset.page;
 var dotsize = 5;
+// Relative path to geojson files from main
 var urlfp = "data/reef_passages/french_polynesia.geojson";
 var urlf = "data/reef_passages/PassesFiji.geojson";
 
 if(page == "mobile-page"){
     console.log("Page détectée :", page);
     dotsize = 15;
+    // Relative path to geojson files from son 1 folders (html sheets other than index)
     urlfp = "../data/reef_passages/french_polynesia.geojson";
     urlf = "../data/reef_passages/PassesFiji.geojson";
 }
@@ -53,6 +55,24 @@ function style_rf(feature){
         })
     ]
 }
+
+function selectedStyle_rf(feature) {
+    return [
+        new ol.style.Style({
+            image: new ol.style.Circle({
+                radius: dotsize,
+                fill: new ol.style.Fill({
+                    color: getColor(feature.get("Type")),
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#fcec03', // Stroke color for selected feature
+                    width: 3      // Thicker stroke to show selection
+                })
+            })
+        })
+    ];
+}
+
 
 // ---------- PROPERTIES
 // ----- French Polynesia
@@ -97,7 +117,7 @@ layer_fiji.set('name', 'fiji');
 var source_bg = new ol.source.XYZ({
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attributions: 'Tiles © Esri — Source: Esri, HERE, Garmin, FAO, NOAA, USGS',
-    wrapX: false
+    wrapX: true
 });
 
 source_bg._title = 'Esri BackGround';
@@ -211,6 +231,8 @@ function after_init_map(){
                     ${feature.get('image') ? `<img src="${feature.get('image')}" alt="Image" style="width:250px;height:187px;">` : '<i>No picture yet</i>'}
                 </div>
                 `;
+
+                selectedFeatureStyle(feature);
             }
 
             // Sets overlay to feature's centroid
@@ -221,9 +243,15 @@ function after_init_map(){
             // Hide overlay if nothing is clicked
             // overlay.setPosition(undefined);
 
+            if (previouslySelected) {
+                previouslySelected.setStyle(style_rf(previouslySelected));
+                previouslySelected = null;
+            }
+
             fixedPanel.classList.remove('visible'); //Hide if no feature clicked
         }
     });
+
     map.addLayer(bglayer);
     map.addLayer(layer_fp);
     map.addLayer(layer_fiji);
@@ -236,12 +264,25 @@ function after_init_map(){
 // ----------- REFRESH VIEW ----------
 // -----------------------------------
 
-function refresh_view() {
-    // Every layers that mays need to be refreshed after an event
-    source_fp.refresh();
-    overlay.changed();
-}
+// function refresh_view() {
+//     source_fp.refresh();
+//     overlay.changed();
+// }
 
+
+// -----------------------------------
+// ----------- SELECTION HL ----------
+// -----------------------------------
+
+function selectedFeatureStyle(feature) {
+    if (previouslySelected) {
+        previouslySelected.setStyle(style_rf(previouslySelected)); // Back to normal
+    }
+
+    feature.setStyle(selectedStyle_rf(feature)); // Apply selection highlight
+
+    previouslySelected = feature;
+}
 
 // -----------------------------------
 // --------- FULLSCREEN VIEW ---------

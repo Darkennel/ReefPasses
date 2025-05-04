@@ -26,10 +26,10 @@ if(page == "mobile-page"){
 }
 
 function getColor(d) {
-    return d == 'Lagoon' ? '#15210D' : // Lagoon
-        d == 'Coastal' ? '#353C1A' : // Coastal
-            d = 'Open Water' ? '#605D30' : // Open Water
-                '#AAA28D'; // Undefined
+    return d == 'Lagoon' ? '#2a96a2' : // Lagoon
+        d == 'Coastal' ? '#3b4e38' : // Coastal
+            d = 'Open Water' ? '#060f2e' : // Open Water
+                '#eeeee4'; // Undefined
 }
 
 function style_rf(feature){

@@ -20,9 +20,14 @@ const blue = [0, 153, 255, 1];
 // Allows to define device-based behaviour or symbology
 const page = document.body.dataset.page;
 var dotsize = 5;
+var urlpf = "data/reef_passages/french_polynesia.geojson";
+var urlf = "data/reef_passages/PassesFiji.geojson";
+
 if(page == "mobile-page"){
     console.log("Page détectée :", page);
     dotsize = 15;
+    urlpf = "../data/reef_passages/french_polynesia.geojson";
+    urlf = "../data/reef_passages/PassesFiji.geojson";
 }
 
 function getColor(d) {

@@ -201,11 +201,6 @@ function showPanel(content) {
     fixedPanel.classList.add('visible');
 }
 
-// Hide fixed panel
-panelCloser.onclick = function () {
-    fixedPanel.classList.remove('visible');
-};
-    
 
 
 // -----------------------------------
@@ -251,6 +246,7 @@ function after_init_map(){
                     <p><strong>Minimal width : </strong>${feature.get('w [m]')} m</p>
                     <p><strong>Distance from shore : </strong>${feature.get('Dist shore')}</p>
                     <p><strong>Passage type : </strong>${feature.get('Type')}</p>
+                    <p><strong>Author : </strong><i>${feature.get('AUTHOR')}</i></p>
                     ${feature.get('image') ? `<img src="${feature.get('image')}" alt="Image" style="width:250px;height:187px;">` : '<i>No picture yet</i>'}
                 </div>
                 `;
@@ -273,6 +269,14 @@ function after_init_map(){
 
             fixedPanel.classList.remove('visible'); // Hides if no feature clicked
         }
+
+        // Hide fixed panel
+        panelCloser.onclick = function () {
+            previouslySelected.setStyle(style_rf(previouslySelected));
+            previouslySelected = null;
+            fixedPanel.classList.remove('visible');
+        };
+
     });
 
     map.addLayer(bglayer);
@@ -280,15 +284,12 @@ function after_init_map(){
     map.addLayer(layer_fiji);
     map.addLayer(layer_nc);
 
-    //map.addLayer(bglayer);
 
     // Zoom to selected layer 
     const zoomSelect = document.getElementById('zoom-select');
+    let lastSelected = null;
 
-    zoomSelect.onchange = function () {
-
-        const selected = zoomSelect.value;
-
+    function zoomToLocation(locationKey) {
         const locations = {
             fiji: {
                 x: 178.0650,
@@ -296,7 +297,7 @@ function after_init_map(){
             },
             tahiti: {
                 x: -149.5322,
-                y: -17.6512,
+                y: -17.6512
             },
             newcaledonia: {
                 x: 165.6180,
@@ -304,14 +305,12 @@ function after_init_map(){
             }
         };
 
-        if (selected && locations[selected]) {
-            const center = locations[selected];
+        if (locationKey && locations[locationKey]) {
+            const center = locations[locationKey];
             const view = map.getView();
 
-             let zoomlevel;
-            if(selected === 'fiji' || selected === 'newcaledonia'){
-                zoomlevel=8;
-            }
+            let zoomlevel = (locationKey === 'fiji' || locationKey === 'newcaledonia') ? 8 : 10;
+
             view.animate({
                 center: ol.proj.fromLonLat([center.x, center.y], 'EPSG:3857'),
                 zoom: zoomlevel,
@@ -319,7 +318,21 @@ function after_init_map(){
             });
 
             console.log('Zoom to:', center);
-            console.log('Current CRS:', map.getView().getProjection().getCode());
+        }
+    }
+
+    // Zooms to selected when selection changes
+    zoomSelect.onchange = function () {
+        const selected = zoomSelect.value;
+        zoomToLocation(selected);
+        lastSelected = selected;
+    };
+
+    // Zooms back to current selection when opening the select menu
+    zoomSelect.onclick = function () {
+        const selected = zoomSelect.value;
+        if (selected === lastSelected) {
+            zoomToLocation(selected);
         }
     };
 

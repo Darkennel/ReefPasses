@@ -153,15 +153,12 @@
     transition: color 0.3s;
     transition: background-color 0.3s;
   }
-
-
   #mobile-func{
     display: inline-block;
   }
   #computer-func{
     display: none; 
   }
-
   #webmap .cs-button-solid:hover {
     background-color: var(--secondary);
     color: #fff;
@@ -244,6 +241,13 @@
     margin: 0;
     color: var(--bodyTextColor);
   }
+  #zoom-select {
+    position:absolute;
+    top : 1.5%;
+    right : 45%;
+    z-index: 50;
+  }
+  
 }
 
 /* Tablet - 768px */

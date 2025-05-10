@@ -23,6 +23,7 @@ var dotsize = 5;
 // Relative path to geojson files from main
 var urlfp = "data/reef_passages/french_polynesia.geojson";
 var urlf = "data/reef_passages/PassesFiji.geojson";
+var urlnc = "data/reef_passages/new_caledonia.geojson";
 
 if(page == "mobile-page"){
     console.log("Page détectée :", page);
@@ -30,6 +31,7 @@ if(page == "mobile-page"){
     // Relative path to geojson files from son 1 folders (html sheets other than index)
     urlfp = "../data/reef_passages/french_polynesia.geojson";
     urlf = "../data/reef_passages/PassesFiji.geojson";
+    urlnc = "../data/reef_passages/new_caledonia.geojson";
 }
 
 function getColor(d) {
@@ -92,6 +94,7 @@ var layer_fp = new ol.layer.Vector({
 // Set name to refer to it later
 layer_fp.set('name', 'fp');
 
+
 // ----- Fiji
 
 var source_fiji = new ol.source.Vector({
@@ -100,7 +103,7 @@ var source_fiji = new ol.source.Vector({
 });
 
 source_fiji._title = "Fiji reef passages";
-source_fiji._description = "Reef passages overFiji archipel";
+source_fiji._description = "Reef passages over Fiji archipelago";
 
 var layer_fiji = new ol.layer.Vector({
     source : source_fiji,
@@ -109,6 +112,23 @@ var layer_fiji = new ol.layer.Vector({
 // Set name to refer to it later
 layer_fiji.set('name', 'fiji');
 
+
+// ----- New Caledonia
+
+var source_nc = new ol.source.Vector({
+    format : new ol.format.GeoJSON(),
+    url : urlnc
+});
+
+source_nc._title = "New-Caledonia reef passages";
+source_nc._description = "Reef passages over New-Caledonia archipelago";
+
+var layer_nc = new ol.layer.Vector({
+    source : source_nc,
+    style : style_rf
+});
+// Set name to refer to it later
+layer_nc.set('name', 'newcaledonia');
 
 // -----------------------------------
 // --------- BASEMAP LAYERS ----------
@@ -120,7 +140,7 @@ var source_bg = new ol.source.XYZ({
     wrapX: true
 });
 
-source_bg._title = 'Esri BackGround';
+source_bg._title = 'Esri Background';
 var bglayer = new ol.layer.Tile({
     source: source_bg
 });
@@ -135,6 +155,8 @@ window.onload = function () {
     map_sdk = Gp.Map.load(
         "map",
         {
+            // apiKey: "cartes,essentiels",
+
             // Init map center
             center: {
                 x: -149.5322,
@@ -183,6 +205,7 @@ function showPanel(content) {
 panelCloser.onclick = function () {
     fixedPanel.classList.remove('visible');
 };
+    
 
 
 // -----------------------------------
@@ -218,7 +241,7 @@ function after_init_map(){
             let content ='';
 
             // Checked which layer is clicked 
-            if (["fp", "fiji"].includes(layer.get('name'))) {
+            if (["fp", "fiji","newcaledonia"].includes(layer.get('name'))) {
                 console.log(layer.get('name'));
                 // Set panel content
                 content = `
@@ -248,15 +271,58 @@ function after_init_map(){
                 previouslySelected = null;
             }
 
-            fixedPanel.classList.remove('visible'); //Hide if no feature clicked
+            fixedPanel.classList.remove('visible'); // Hides if no feature clicked
         }
     });
 
     map.addLayer(bglayer);
     map.addLayer(layer_fp);
     map.addLayer(layer_fiji);
+    map.addLayer(layer_nc);
 
     //map.addLayer(bglayer);
+
+    // Zoom to selected layer 
+    const zoomSelect = document.getElementById('zoom-select');
+
+    zoomSelect.onchange = function () {
+
+        const selected = zoomSelect.value;
+
+        const locations = {
+            fiji: {
+                x: 178.0650,
+                y: -17.7134
+            },
+            tahiti: {
+                x: -149.5322,
+                y: -17.6512,
+            },
+            newcaledonia: {
+                x: 165.6180,
+                y: -21.2990
+            }
+        };
+
+        if (selected && locations[selected]) {
+            const center = locations[selected];
+            const view = map.getView();
+
+             let zoomlevel;
+            if(selected === 'fiji' || selected === 'newcaledonia'){
+                zoomlevel=8;
+            }
+            view.animate({
+                center: ol.proj.fromLonLat([center.x, center.y], 'EPSG:3857'),
+                zoom: zoomlevel,
+                duration: 1000
+            });
+
+            console.log('Zoom to:', center);
+            console.log('Current CRS:', map.getView().getProjection().getCode());
+        }
+    };
+
 }
 
 
@@ -299,7 +365,5 @@ function fullScreenView() {
       mapElement.msRequestFullscreen();
     }
 }
-
-
 
 

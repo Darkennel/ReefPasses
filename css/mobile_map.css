@@ -45,3 +45,9 @@
     pointer-events: auto;
 }
 
+#zoom-select {
+    position:absolute;
+    top : 1.5%;
+    right : 45%;
+    z-index: 50;
+}

@@ -103,6 +103,7 @@
   }
   #webmap .cs-text {
     margin-bottom: 1.25rem;
+    text-align: justify;
   }
   #webmap .cs-text a{
     color:var(--primary);

@@ -125,6 +125,13 @@ var bglayer = new ol.layer.Tile({
     source: source_bg
 });
 
+var labelLayer = new ol.layer.Tile({
+    source: new ol.source.XYZ({
+        url: 'https://{a-c}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
+        attributions: '&copy; OpenStreetMap contributors & CartoDB'
+    })
+});
+labelLayer.set('name', 'Toponymes OSM');
 
 // -----------------------------------
 // ------------- INIT MAP ------------
@@ -253,7 +260,7 @@ function after_init_map(){
             fixedPanel.classList.remove('visible'); //Hide if no feature clicked
         }
     });
-
+    map.addLayer(labelLayer);
     map.addLayer(bglayer);
     map.addLayer(layer_fp);
     map.addLayer(layer_fiji);

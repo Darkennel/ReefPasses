@@ -114,16 +114,18 @@ layer_fiji.set('name', 'fiji');
 // --------- BASEMAP LAYERS ----------
 // -----------------------------------
 
-var source_bg = new ol.source.XYZ({
+var source_bg_op = new ol.source.XYZ({
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attributions: 'Tiles © Esri — Source: Esri, HERE, Garmin, FAO, NOAA, USGS',
     wrapX: true
 });
 
-source_bg._title = 'Esri BackGround';
-var bglayer = new ol.layer.Tile({
-    source: source_bg
+source_bg_op._title = 'Esri BackGround';
+var bglayer_op = new ol.layer.Tile({
+    source: source_bg_op
 });
+
+
 
 
 // -----------------------------------
@@ -254,11 +256,10 @@ function after_init_map(){
         }
     });
 
-    map.addLayer(bglayer);
+    map.addLayer(bglayer_op);
+    map.addLayer(bglayer_topo);
     map.addLayer(layer_fp);
     map.addLayer(layer_fiji);
-
-    //map.addLayer(bglayer);
 }
 
 

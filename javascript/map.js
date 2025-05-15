@@ -23,6 +23,7 @@ var dotsize = 5;
 // Relative path to geojson files from main
 var urlfp = "data/reef_passages/french_polynesia.geojson";
 var urlf = "data/reef_passages/PassesFiji.geojson";
+var urlnc = "data/reef_passages/new_caledonia.geojson";
 
 if(page == "mobile-page"){
     console.log("Page détectée :", page);
@@ -30,6 +31,7 @@ if(page == "mobile-page"){
     // Relative path to geojson files from son 1 folders (html sheets other than index)
     urlfp = "../data/reef_passages/french_polynesia.geojson";
     urlf = "../data/reef_passages/PassesFiji.geojson";
+    urlnc = "../data/reef_passages/new_caledonia.geojson";
 }
 
 function getColor(d) {
@@ -66,7 +68,7 @@ function selectedStyle_rf(feature) {
                 }),
                 stroke: new ol.style.Stroke({
                     color: '#fcec03', // Stroke color for selected feature
-                    width: 3      // Thicker stroke to show selection
+                    width: 1      // Thicker stroke to show selection
                 })
             })
         })
@@ -100,7 +102,7 @@ var source_fiji = new ol.source.Vector({
 });
 
 source_fiji._title = "Fiji reef passages";
-source_fiji._description = "Reef passages overFiji archipel";
+source_fiji._description = "Reef passages over Fiji archipelago";
 
 var layer_fiji = new ol.layer.Vector({
     source : source_fiji,
@@ -109,20 +111,49 @@ var layer_fiji = new ol.layer.Vector({
 // Set name to refer to it later
 layer_fiji.set('name', 'fiji');
 
+// ----- New Caledonia
+
+var source_nc = new ol.source.Vector({
+    format : new ol.format.GeoJSON(),
+    url : urlnc
+});
+
+source_nc._title = "New-Caledonia reef passages";
+source_nc._description = "Reef passages over New-Caledonia archipelago";
+
+var layer_nc = new ol.layer.Vector({
+    source : source_nc,
+    style : style_rf
+});
+// Set name to refer to it later
+layer_nc.set('name', 'newcaledonia');
+
 
 // -----------------------------------
 // --------- BASEMAP LAYERS ----------
 // -----------------------------------
 
-var source_bg = new ol.source.XYZ({
+var source_bg_op = new ol.source.XYZ({
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attributions: 'Tiles © Esri — Source: Esri, HERE, Garmin, FAO, NOAA, USGS',
+    attributions: 'Tiles © Esri — Source: Esri, HERE, Garmin, FAO, NOAA, USGS,',
     wrapX: true
 });
 
-source_bg._title = 'Esri BackGround';
-var bglayer = new ol.layer.Tile({
-    source: source_bg
+source_bg_op._title = 'Esri Background';
+var bglayer_op = new ol.layer.Tile({
+    source: source_bg_op
+});
+
+
+var source_bg_topo = new ol.source.XYZ({
+    url: 'https://{a-c}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+    attributions: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    wrapX: true
+});
+
+source_bg_topo._title = 'CartoDB';
+var bglayer_topo = new ol.layer.Tile({
+    source: source_bg_topo
 });
 
 var labelLayer = new ol.layer.Tile({
@@ -186,11 +217,6 @@ function showPanel(content) {
     fixedPanel.classList.add('visible');
 }
 
-// Hide fixed panel
-panelCloser.onclick = function () {
-    fixedPanel.classList.remove('visible');
-};
-
 
 // -----------------------------------
 // ---- AFTER INIT MAP FUNCTIONS -----
@@ -225,7 +251,7 @@ function after_init_map(){
             let content ='';
 
             // Checked which layer is clicked 
-            if (["fp", "fiji"].includes(layer.get('name'))) {
+                if (["fp", "fiji","newcaledonia"].includes(layer.get('name'))) {
                 console.log(layer.get('name'));
                 // Set panel content
                 content = `
@@ -235,6 +261,7 @@ function after_init_map(){
                     <p><strong>Minimal width : </strong>${feature.get('w [m]')} m</p>
                     <p><strong>Distance from shore : </strong>${feature.get('Dist shore')}</p>
                     <p><strong>Passage type : </strong>${feature.get('Type')}</p>
+                    <p><strong>Author : </strong><i>${feature.get('AUTHOR')}</i></p>
                     <p><strong>References : </strong> <!-- ajouter les references (Liens/ressources) --> 
                     ${feature.get('image') ? `<img src="${feature.get('image')}" alt="Image" style="width:250px;height:187px;">` : '<i>No picture yet</i>'
                     }
@@ -257,15 +284,80 @@ function after_init_map(){
                 previouslySelected = null;
             }
 
-            fixedPanel.classList.remove('visible'); //Hide if no feature clicked
+            fixedPanel.classList.remove('visible'); //Hides if no feature clicked
         }
+
+        // Hide fixed panel
+        panelCloser.onclick = function () {
+            previouslySelected.setStyle(style_rf(previouslySelected));
+            previouslySelected = null;
+            fixedPanel.classList.remove('visible');
+        };
+
     });
+<<<<<<< HEAD
     map.addLayer(labelLayer);
     map.addLayer(bglayer);
+=======
+
+    map.addLayer(bglayer_op);
+    map.addLayer(bglayer_topo);
+>>>>>>> 5ff86e6302a51d7ed27442df25b5705653f60de1
     map.addLayer(layer_fp);
     map.addLayer(layer_fiji);
+    map.addLayer(layer_nc);
 
-    //map.addLayer(bglayer);
+
+    // Zoom to selected layer 
+    const zoomSelect = document.getElementById('zoom-select');
+    let lastSelected = null;
+
+    function zoomToLocation(locationKey) {
+        const locations = {
+            fiji: {
+                x: 178.0650,
+                y: -17.7134
+            },
+            tahiti: {
+                x: -149.5322,
+                y: -17.6512
+            },
+            newcaledonia: {
+                x: 165.6180,
+                y: -21.2990
+            }
+        };
+
+        if (locationKey && locations[locationKey]) {
+            const center = locations[locationKey];
+            const view = map.getView();
+
+            let zoomlevel = (locationKey === 'fiji' || locationKey === 'newcaledonia') ? 8 : 10;
+
+            view.animate({
+                center: ol.proj.fromLonLat([center.x, center.y], 'EPSG:3857'),
+                zoom: zoomlevel,
+                duration: 1000
+            });
+
+            console.log('Zoom to:', center);
+        }
+    }
+
+    // Zooms to selected when selection changes
+    zoomSelect.onchange = function () {
+        const selected = zoomSelect.value;
+        zoomToLocation(selected);
+        lastSelected = selected;
+    };
+
+    // Zooms back to current selection when opening the select menu
+    zoomSelect.onclick = function () {
+        const selected = zoomSelect.value;
+        if (selected === lastSelected) {
+            zoomToLocation(selected);
+        }
+    };
 }
 
 

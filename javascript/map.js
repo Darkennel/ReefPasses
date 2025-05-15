@@ -133,17 +133,21 @@ layer_nc.set('name', 'newcaledonia');
 // --------- BASEMAP LAYERS ----------
 // -----------------------------------
 
+
+// ----- World Imagery ESRI 
+
 var source_bg_op = new ol.source.XYZ({
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attributions: 'Tiles © Esri — Source: Esri, HERE, Garmin, FAO, NOAA, USGS,',
     wrapX: true
 });
 
-source_bg_op._title = 'Esri Background';
+source_bg_op._title = 'Esri World Imagery';
 var bglayer_op = new ol.layer.Tile({
     source: source_bg_op
 });
 
+// ----- CartoDB Voyager
 
 var source_bg_topo = new ol.source.XYZ({
     url: 'https://{a-c}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
@@ -151,18 +155,27 @@ var source_bg_topo = new ol.source.XYZ({
     wrapX: true
 });
 
-source_bg_topo._title = 'CartoDB';
+source_bg_topo._title = 'CartoDB Voyager';
 var bglayer_topo = new ol.layer.Tile({
     source: source_bg_topo
 });
 
+// ----- OSM Standard
+
+var source_osm = new ol.source.OSM({
+    attributions: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+});
+
+source_osm._title = 'OSM Standard';
+var bglayer_osm = new ol.layer.Tile({
+    source: source_osm
+});
 
 // -----------------------------------
 // ------------- INIT MAP ------------
 // -----------------------------------
 
 window.onload = function () {
-
     map_sdk = Gp.Map.load(
         "map",
         {
@@ -280,7 +293,7 @@ function after_init_map(){
             fixedPanel.classList.remove('visible'); //Hides if no feature clicked
         }
 
-        // Hide fixed panel
+        // Changes selected item's style if it is unselected
         panelCloser.onclick = function () {
             previouslySelected.setStyle(style_rf(previouslySelected));
             previouslySelected = null;
@@ -289,11 +302,18 @@ function after_init_map(){
 
     });
 
-    map.addLayer(bglayer_op);
     map.addLayer(bglayer_topo);
+    map.addLayer(bglayer_osm);
+    map.addLayer(bglayer_op);
     map.addLayer(layer_fp);
     map.addLayer(layer_fiji);
     map.addLayer(layer_nc);
+
+    // Add scalebar
+    var scaleLineControl = new ol.control.ScaleLine({
+        units: 'metric' 
+    });
+    map.addControl(scaleLineControl);
 
 
     // Zoom to selected layer 

@@ -126,6 +126,16 @@ var bglayer_op = new ol.layer.Tile({
 });
 
 
+var source_bg_topo = new ol.source.XYZ({
+    url: 'https://{a-c}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+    attributions: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    wrapX: true
+});
+
+source_bg_topo._title = 'CartoDB';
+var bglayer_topo = new ol.layer.Tile({
+    source: source_bg_topo
+});
 
 
 // -----------------------------------

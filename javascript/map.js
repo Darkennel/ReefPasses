@@ -173,13 +173,15 @@ var bglayer_osm = new ol.layer.Tile({
 
 // ----- Labels
 
+var source_label = new ol.source.XYZ({
+    url: 'https://{a-c}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
+})
+
+source_label._title = 'Label layer';
 var labelLayer = new ol.layer.Tile({
-    source: new ol.source.XYZ({
-        url: 'https://{a-c}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
-        attributions: '&copy; OpenStreetMap contributors & CartoDB'
-    })
+    source: source_label
 });
-labelLayer.set('name', 'Toponymes OSM');
+
 
 // -----------------------------------
 // ------------- INIT MAP ------------
@@ -191,13 +193,13 @@ window.onload = function () {
         {
             // Init map center
             center: {
-                x: 178.0650,
+                x: -178,
                 y: -17.7134,
 
                 // ,
                 projection : "CRS:84"
             },
-            zoom: 10,
+            zoom: 4.5,
             // Control options
             controlsOptions: {
                 // Search Bar

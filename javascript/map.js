@@ -9,7 +9,7 @@ var map_sdk = null;
 
 let previouslySelected = null;
 
-const white = [255, 255, 255, 1];
+const white = [220, 220, 220, 1];
 
 // -----------------------------------
 // ---------- VECTOR LAYERS ----------
@@ -51,7 +51,7 @@ function style_rf(feature){
                 }),
                 stroke: new ol.style.Stroke({
                     color: white,
-                    width: 1,
+                    width: 2,
                 })
             })
         })
@@ -68,7 +68,7 @@ function selectedStyle_rf(feature) {
                 }),
                 stroke: new ol.style.Stroke({
                     color: '#fcec03', // Stroke color for selected feature
-                    width: 1      // Thicker stroke to show selection
+                    width: 2      // Thicker stroke to show selection
                 })
             })
         })

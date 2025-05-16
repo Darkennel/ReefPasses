@@ -191,8 +191,8 @@ window.onload = function () {
         {
             // Init map center
             center: {
-                x: -149.5322,
-                y: -17.6512,
+                x: 178.0650,
+                y: -17.7134,
 
                 // ,
                 projection : "CRS:84"

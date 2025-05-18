@@ -102,6 +102,7 @@ var source_fiji = new ol.source.Vector({
 });
 
 source_fiji._title = "Fiji reef passages";
+source_fiji._description = "Reef passages overFiji archipel";
 source_fiji._description = "Reef passages over Fiji archipelago";
 
 var layer_fiji = new ol.layer.Vector({
@@ -135,10 +136,12 @@ layer_nc.set('name', 'newcaledonia');
 
 var source_bg_op = new ol.source.XYZ({
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attributions: 'Tiles © Esri — Source: Esri, HERE, Garmin, FAO, NOAA, USGS',
     attributions: 'Tiles © Esri — Source: Esri, HERE, Garmin, FAO, NOAA, USGS,',
     wrapX: true
 });
 
+source_bg_op._title = 'Esri BackGround';
 source_bg_op._title = 'Esri Background';
 var bglayer_op = new ol.layer.Tile({
     source: source_bg_op
@@ -156,13 +159,6 @@ var bglayer_topo = new ol.layer.Tile({
     source: source_bg_topo
 });
 
-var labelLayer = new ol.layer.Tile({
-    source: new ol.source.XYZ({
-        url: 'https://{a-c}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
-        attributions: '&copy; OpenStreetMap contributors & CartoDB'
-    })
-});
-labelLayer.set('name', 'Toponymes OSM');
 
 // -----------------------------------
 // ------------- INIT MAP ------------
@@ -217,6 +213,11 @@ function showPanel(content) {
     fixedPanel.classList.add('visible');
 }
 
+// Hide fixed panel
+panelCloser.onclick = function () {
+    fixedPanel.classList.remove('visible');
+};
+
 
 // -----------------------------------
 // ---- AFTER INIT MAP FUNCTIONS -----
@@ -240,69 +241,73 @@ function after_init_map(){
         var result = map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
             return { feature: feature, layer: layer };
         });
-
+    
         if (result && result.feature && result.layer) {
             var feature = result.feature;
             var layer = result.layer;
-            // Centroid for pop-up purpose
-            // var geometry = feature.getGeometry();
-            // var centroid = ol.extent.getCenter(geometry.getExtent());
-
-            let content ='';
-
-            // Checked which layer is clicked 
-                if (["fp", "fiji","newcaledonia"].includes(layer.get('name'))) {
-                console.log(layer.get('name'));
-                // Set panel content
+            let layerName = layer.get('name');
+    
+            let content = '';
+    
+            // Couches autorisées à afficher le panneau
+            const allowedLayers = ["fp", "fiji", "newcaledonia"];
+    
+            if (allowedLayers.includes(layerName)) {
+                console.log(layerName);
+    
                 content = `
-                <div class="layer-content">
-                    <h3>Passage ${feature.get('ID')}</h3>
-                    <p><strong>Name : </strong>${feature.get('NAME')}</p>
-                    <p><strong>Minimal width : </strong>${feature.get('w [m]')} m</p>
-                    <p><strong>Distance from shore : </strong>${feature.get('Dist shore')}</p>
-                    <p><strong>Passage type : </strong>${feature.get('Type')}</p>
-                    <p><strong>Author : </strong><i>${feature.get('AUTHOR')}</i></p>
-                    <p><strong>References : </strong> <!-- ajouter les references (Liens/ressources) --> 
-                    ${feature.get('image') ? `<img src="${feature.get('image')}" alt="Image" style="width:250px;height:187px;">` : '<i>No picture yet</i>'
-                    }
-                </div>
+                    <div class="layer-content">
+                        <h3>Passage ${feature.get('ID')}</h3>
+                        <p><strong>Name :</strong> ${feature.get('NAME')}</p>
+                        <p><strong>Minimal width :</strong> ${feature.get('w [m]')} m</p>
+                        <p><strong>Distance from shore :</strong> ${feature.get('Dist shore')}</p>
+                        <p><strong>Passage type :</strong> ${feature.get('Type')}</p>
+                        <p><strong>Author :</strong> <i>${feature.get('AUTHOR')}</i></p>
+                        <p><strong>References :</strong></p>
+                        ${feature.get('image') 
+                            ? `<img src="${feature.get('image')}" alt="Image" style="width:250px;height:187px;">`
+                            : '<i>No picture yet</i>'
+                        }
+                    </div>
                 `;
-
+    
+                // Appliquer style à la feature sélectionnée
                 selectedFeatureStyle(feature);
+    
+                // Affiche le panneau (à adapter à ta logique)
+                showPanel(content);
+    
+                // (Optionnel) Centroid si besoin
+                // var centroid = ol.extent.getCenter(feature.getGeometry().getExtent());
+                // overlay.setPosition(centroid);
+    
+                // Sauvegarde la feature sélectionnée
+                previouslySelected = feature;
             }
-
-            // Sets overlay to feature's centroid
-            // overlay.setPosition(centroid);
-            showPanel(content);
-
+    
         } else {
-            // Hide overlay if nothing is clicked
-            // overlay.setPosition(undefined);
-
+            // Aucun clic sur une entité
             if (previouslySelected) {
                 previouslySelected.setStyle(style_rf(previouslySelected));
                 previouslySelected = null;
             }
-
-            fixedPanel.classList.remove('visible'); //Hides if no feature clicked
+    
+            fixedPanel.classList.remove('visible');
         }
-
-        // Hide fixed panel
+    
+        // Fermeture du panneau via bouton
         panelCloser.onclick = function () {
-            previouslySelected.setStyle(style_rf(previouslySelected));
-            previouslySelected = null;
+            if (previouslySelected) {
+                previouslySelected.setStyle(style_rf(previouslySelected));
+                previouslySelected = null;
+            }
             fixedPanel.classList.remove('visible');
         };
-
     });
-<<<<<<< HEAD
-    map.addLayer(labelLayer);
-    map.addLayer(bglayer);
-=======
+    
 
     map.addLayer(bglayer_op);
     map.addLayer(bglayer_topo);
->>>>>>> 5ff86e6302a51d7ed27442df25b5705653f60de1
     map.addLayer(layer_fp);
     map.addLayer(layer_fiji);
     map.addLayer(layer_nc);
@@ -400,7 +405,6 @@ function fullScreenView() {
       mapElement.msRequestFullscreen();
     }
 }
-
 
 
 

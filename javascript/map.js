@@ -9,7 +9,7 @@ var map_sdk = null;
 
 let previouslySelected = null;
 
-const white = [255, 255, 255, 1];
+const white = [220, 220, 220, 1];
 
 // -----------------------------------
 // ---------- VECTOR LAYERS ----------
@@ -51,7 +51,7 @@ function style_rf(feature){
                 }),
                 stroke: new ol.style.Stroke({
                     color: white,
-                    width: 1,
+                    width: 2,
                 })
             })
         })
@@ -68,7 +68,7 @@ function selectedStyle_rf(feature) {
                 }),
                 stroke: new ol.style.Stroke({
                     color: '#fcec03', // Stroke color for selected feature
-                    width: 1      // Thicker stroke to show selection
+                    width: 2      // Thicker stroke to show selection
                 })
             })
         })
@@ -134,6 +134,9 @@ layer_nc.set('name', 'newcaledonia');
 // --------- BASEMAP LAYERS ----------
 // -----------------------------------
 
+
+// ----- World Imagery ESRI 
+
 var source_bg_op = new ol.source.XYZ({
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attributions: 'Tiles © Esri — Source: Esri, HERE, Garmin, FAO, NOAA, USGS',
@@ -147,6 +150,7 @@ var bglayer_op = new ol.layer.Tile({
     source: source_bg_op
 });
 
+// ----- CartoDB Voyager
 
 var source_bg_topo = new ol.source.XYZ({
     url: 'https://{a-c}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
@@ -154,9 +158,31 @@ var source_bg_topo = new ol.source.XYZ({
     wrapX: true
 });
 
-source_bg_topo._title = 'CartoDB';
+source_bg_topo._title = 'CartoDB Voyager';
 var bglayer_topo = new ol.layer.Tile({
     source: source_bg_topo
+});
+
+// ----- OSM Standard
+
+var source_osm = new ol.source.OSM({
+    attributions: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+});
+
+source_osm._title = 'OSM Standard';
+var bglayer_osm = new ol.layer.Tile({
+    source: source_osm
+});
+
+// ----- Labels
+
+var source_label = new ol.source.XYZ({
+    url: 'https://{a-c}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
+})
+
+source_label._title = 'Label layer';
+var labelLayer = new ol.layer.Tile({
+    source: source_label
 });
 
 
@@ -165,19 +191,18 @@ var bglayer_topo = new ol.layer.Tile({
 // -----------------------------------
 
 window.onload = function () {
-
     map_sdk = Gp.Map.load(
         "map",
         {
             // Init map center
             center: {
-                x: -149.5322,
-                y: -17.6512,
+                x: -178,
+                y: -17.7134,
 
                 // ,
                 projection : "CRS:84"
             },
-            zoom: 10,
+            zoom: 4.5,
             // Control options
             controlsOptions: {
                 // Search Bar
@@ -306,11 +331,19 @@ function after_init_map(){
     });
     
 
-    map.addLayer(bglayer_op);
     map.addLayer(bglayer_topo);
+    map.addLayer(bglayer_osm);
+    map.addLayer(bglayer_op);
+    map.addLayer(labelLayer);
     map.addLayer(layer_fp);
     map.addLayer(layer_fiji);
     map.addLayer(layer_nc);
+
+    // Add scalebar
+    var scaleLineControl = new ol.control.ScaleLine({
+        units: 'metric' 
+    });
+    map.addControl(scaleLineControl);
 
 
     // Zoom to selected layer 

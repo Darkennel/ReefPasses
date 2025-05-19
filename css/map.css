@@ -36,10 +36,41 @@
   bottom: 230px;
   position: absolute;
 
-  max-height : 400px;
-  height : 400px;
-  margin-top : 20px;
-  padding: 20px;
+  font-size: 1rem;
+
+  max-height : 25rem;
+  max-width : 25rem;
+  height : 25rem;
+  margin-top : 1.25rem;
+  padding: 1.25rem;
+
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 50;
+  overflow-y: scroll;
+  overflow-x: scroll;
+
+  /* transition settings */
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: transform 0.4s ease, opacity 0.4s ease;
+  pointer-events: none; /* prevent clicks when hidden */
+}
+
+.media-fixed-panel {
+  top: 100px;
+  right: 0px;
+  bottom: 230px;
+  position: absolute;
+
+  font-size: 1rem;
+
+  max-height : 25rem;
+  max-width : 25rem;
+  height : 25rem;
+  margin-top : 0rem;
+  padding: 0rem;
 
   background-color: white;
   border: 1px solid #ccc;
@@ -55,11 +86,12 @@
   pointer-events: none; /* prevent clicks when hidden */
 }
   
-.fixed-panel.visible {
+.fixed-panel.visible, .media-fixed-panel.visible {
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
 }
+
 
 
 /** -------------------- WEBMAP SECTION -------------------- **/

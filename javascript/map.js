@@ -230,16 +230,26 @@ const fixedPanel = document.getElementById('fixed-panel');
 const panelContent = document.getElementById('panel-content');
 const panelCloser = document.getElementById('panel-closer');
 
+const fixedMediaPanel = document.getElementById('media-fixed-panel');
+const mediaPanelContent = document.getElementById('media-panel-content');
+
+
 console.log(panelCloser);
 
-// Show fixed panel
+
+// Show fixed panels
 function showPanel(content) {
     panelContent.innerHTML = content;
     fixedPanel.classList.add('visible');
 }
+function showMediaPanel(media_content) {
+    mediaPanelContent.innerHTML = media_content;
+    fixedMediaPanel.classList.add('visible');
+}
 
-// Hide fixed panel
+// Hide fixed panels
 panelCloser.onclick = function () {
+    fixedMediaPanel.classList.remove('visible')
     fixedPanel.classList.remove('visible');
 };
 
@@ -273,8 +283,9 @@ function after_init_map(){
             let layerName = layer.get('name');
     
             let content = '';
+            let media_content = '';
     
-            // Couches autorisées à afficher le panneau
+            // Layers that can feed a panel content 
             const allowedLayers = ["fp", "fiji", "newcaledonia"];
     
             if (allowedLayers.includes(layerName)) {
@@ -282,55 +293,97 @@ function after_init_map(){
     
                 content = `
                     <div class="layer-content">
-                        <h3>Passage ${feature.get('ID')}</h3>
-                        <p><strong>Name :</strong> ${feature.get('NAME')}</p>
-                        <p><strong>Minimal width :</strong> ${feature.get('w [m]')} m</p>
-                        <p><strong>Distance from shore :</strong> ${feature.get('Dist shore')}</p>
-                        <p><strong>Passage type :</strong> ${feature.get('Type')}</p>
-                        <p><strong>Author :</strong> <i>${feature.get('AUTHOR')}</i></p>
-                        <p><strong>References :</strong></p>
-                        ${feature.get('image') 
-                            ? `<img src="${feature.get('image')}" alt="Image" style="width:250px;height:187px;">`
-                            : '<i>No picture yet</i>'
+
+                        <p style="font-size:1.5rem;">Passage n°<strong>${feature.get('ID')}</strong></p>
+
+                        <p>Located on: <strong>${feature.get('Location')}</strong></p>
+
+                        ${feature.get('NAME') 
+                            ? `<p>Name: ${feature.get('NAME')}</p>`
+                            : `<p>Name: <i>unknown</i>` 
                         }
+
+                        ${feature.get('w [m]') 
+                            ? `<p>Minimal width: <strong>${feature.get('w [m]')}</strong> m</p>`
+                            : `<p>Minimal width: <i>unknown</i>` 
+                        }
+
+                        ${feature.get('w [m]') 
+                            ? `<p>Distance from shore: <strong>${feature.get('Dist shore')}</strong></p>`
+                            : `<p>Distance from shore: <i>unknown</i>` 
+                        }
+                        
+                        ${feature.get('w [m]') 
+                            ? `<p>Passage type: <strong>${feature.get('Type')}</strong></p>`
+                            : `<p>Passage type: <i>unclassified</i>` 
+                        }
+
+                        <hr>
+                        <p style = "text-align: center; font-size: 0.5rem">Inventoried by: <i>${feature.get('AUTHOR')}</i></p>
+                        <hr>
+                       
+                        <p><strong>Description :</strong></p>
+                       
+                        ${feature.get('DESCRIPTION') 
+                            ? `<p style="text-align: justify;">${feature.get('DESCRIPTION')}</p>`
+                            : '<i>A description for this reef passage will be added soon. </i>'
+                        }
+
                     </div>
                 `;
     
-                // Appliquer style à la feature sélectionnée
+                media_content = `
+                    <div style="max-width: 400px;">
+                        <img 
+                        src="../media/webmap/transects/${feature.get('ID')}_transect.png"
+                        alt="Transect 432"
+                        style="width: 100%; height: auto;"
+                        onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<p style=text-align:center;><i>No transect available yet.</i></p>');"
+                        />
+                        <p style="text-align: justify; margin: 0.6rem;">Transect is to be read from left to right matching the arrow direction on the transect's layer.</p>
+                    </div>
+                `;
+                console.log(media_content);
+
+                // Apply selected style to feature
                 selectedFeatureStyle(feature);
     
-                // Affiche le panneau (à adapter à ta logique)
+                // Display panel
                 showPanel(content);
+                showMediaPanel(media_content);
     
-                // (Optionnel) Centroid si besoin
+                // Centroid if needed
                 // var centroid = ol.extent.getCenter(feature.getGeometry().getExtent());
                 // overlay.setPosition(centroid);
     
-                // Sauvegarde la feature sélectionnée
+                // Save select feature as the previously selected feature
                 previouslySelected = feature;
             }
     
         } else {
-            // Aucun clic sur une entité
+            // Clic outside a feature
             if (previouslySelected) {
                 previouslySelected.setStyle(style_rf(previouslySelected));
                 previouslySelected = null;
             }
     
             fixedPanel.classList.remove('visible');
+            fixedMediaPanel.classList.remove('visible')
         }
     
-        // Fermeture du panneau via bouton
+        // Closing panel using button
         panelCloser.onclick = function () {
             if (previouslySelected) {
                 previouslySelected.setStyle(style_rf(previouslySelected));
                 previouslySelected = null;
             }
             fixedPanel.classList.remove('visible');
+            fixedMediaPanel.classList.remove('visible');
         };
     });
     
 
+    // Add vector layers
     map.addLayer(bglayer_topo);
     map.addLayer(bglayer_osm);
     map.addLayer(bglayer_op);
@@ -338,6 +391,7 @@ function after_init_map(){
     map.addLayer(layer_fp);
     map.addLayer(layer_fiji);
     map.addLayer(layer_nc);
+
 
     // Add scalebar
     var scaleLineControl = new ol.control.ScaleLine({
@@ -402,11 +456,6 @@ function after_init_map(){
 // -----------------------------------
 // ----------- REFRESH VIEW ----------
 // -----------------------------------
-
-// function refresh_view() {
-//     source_fp.refresh();
-//     overlay.changed();
-// }
 
 
 // -----------------------------------

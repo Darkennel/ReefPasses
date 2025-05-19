@@ -299,7 +299,7 @@ function after_init_map(){
                         <p>Located on: <strong>${feature.get('Location')}</strong></p>
 
                         ${feature.get('NAME') 
-                            ? `<p>Name: ${feature.get('NAME')}</p>`
+                            ? `<p>Name: <strong>${feature.get('NAME')}</strong></p>`
                             : `<p>Name: <i>unknown</i>` 
                         }
 
@@ -329,20 +329,35 @@ function after_init_map(){
                             : '<i>A description for this reef passage will be added soon. </i>'
                         }
 
+                        <hr>
+
+                        <div style="max-width: 400px;">
+                            <img 
+                            src="../media/webmap/transects/${feature.get('ID')}_transect.png"
+                            alt="Transect 432"
+                            style="width: 100%; height: auto;"
+                            onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<p style=text-align:center;><i>No transect available yet.</i></p>');"
+                            />
+                            <p style="text-align: justify; margin: 0.6rem;">Transect is to be read from left to right matching the arrow direction on the transect's layer.</p>
+                        </div>
+
                     </div>
                 `;
     
                 media_content = `
                     <div style="max-width: 400px;">
+                        <p style="text-align : center";>Additional media:</p>
+
                         <img 
-                        src="../media/webmap/transects/${feature.get('ID')}_transect.png"
-                        alt="Transect 432"
+                        src="../media/webmap/pictures/${feature.get('ID')}.png"
+                        alt="picture of passage n°432"
                         style="width: 100%; height: auto;"
-                        onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<p style=text-align:center;><i>No transect available yet.</i></p>');"
+                        onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<p style=text-align:center;><i>No additional media available yet.</i></p>');"
                         />
-                        <p style="text-align: justify; margin: 0.6rem;">Transect is to be read from left to right matching the arrow direction on the transect's layer.</p>
+
                     </div>
                 `;
+
                 console.log(media_content);
 
                 // Apply selected style to feature
@@ -402,7 +417,7 @@ function after_init_map(){
 
     // Zoom to selected layer 
     const zoomSelect = document.getElementById('zoom-select');
-    let lastSelected = null;
+    let lastSelected = "";
 
     function zoomToLocation(locationKey) {
         const locations = {
@@ -456,6 +471,7 @@ function after_init_map(){
 // -----------------------------------
 // ----------- REFRESH VIEW ----------
 // -----------------------------------
+
 
 
 // -----------------------------------

@@ -59,16 +59,15 @@
 }
 
 .media-fixed-panel {
-  top: 100px;
+  bottom: 2.7rem;
   right: 0px;
-  bottom: 230px;
   position: absolute;
 
   font-size: 1rem;
 
   max-height : 25rem;
+  width:25rem;
   max-width : 25rem;
-  height : 25rem;
   margin-top : 0rem;
   padding: 0rem;
 
@@ -81,7 +80,7 @@
 
   /* transition settings */
   opacity: 0;
-  transform: translateX(-100%);
+  transform: translateY(100%);
   transition: transform 0.4s ease, opacity 0.4s ease;
   pointer-events: none; /* prevent clicks when hidden */
 }
@@ -90,6 +89,12 @@
   opacity: 1;
   transform: translateX(0);
   pointer-events: auto;
+}
+
+.panel-closer {
+  position: sticky;
+  top:.5rem;
+  right:.5rem;
 }
 
 

@@ -39,10 +39,12 @@ if(page == "mobile-page"){
 }
 
 function getColor(d) {
-    return d == 'Lagoon' ? '#2a96a2' : // Lagoon
-        d == 'Coastal' ? '#3b4e38' : // Coastal
-            d == 'Open Water' ? '#060f2e' : // Open Water
-                '#eeeee4'; // Undefined
+    switch (d) {
+        case 'Lagoon': return '#2a96a2';
+        case 'Coastal': return '#3b4e38';
+        case 'Open Water': return '#060f2e';
+        default: return '#eeeee4';
+    }
 }
 
 // Basic type-defined style
@@ -392,12 +394,12 @@ function after_init_map(){
                             : `<p>Minimal width: <i>unknown</i>` 
                         }
 
-                        ${feature.get('w [m]') 
-                            ? `<p>Distance from shore: <strong>${feature.get('Dist shore')}</strong></p>`
+                        ${feature.get('Dist shore') 
+                            ? `<p>Distance from shore: <strong>${feature.get('Dist shore')}</strong> m</p>`
                             : `<p>Distance from shore: <i>unknown</i>` 
                         }
                         
-                        ${feature.get('w [m]') 
+                        ${feature.get('Type') 
                             ? `<p>Passage type: <strong>${feature.get('Type')}</strong></p>`
                             : `<p>Passage type: <i>unclassified</i>` 
                         }
@@ -422,7 +424,7 @@ function after_init_map(){
                             style="width: 100%; height: auto;"
                             onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<p style=text-align:center;><i>No transect available yet.</i></p>');"
                             />
-                            <p style="text-align: justify; margin: 0.6rem;">Transect is to be read from left to right matching the arrow direction on the transect's layer.</p>
+                            <p style="text-align: justify; margin: 0.6rem;">Transect should be read from left to right matching the arrow direction on the map.</p>
                         </div>
 
                     </div>

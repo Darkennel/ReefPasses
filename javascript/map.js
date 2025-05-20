@@ -74,7 +74,7 @@ function selectedStyle_rf(feature) {
                 }),
                 stroke: new ol.style.Stroke({
                     color: '#fcec03', // Stroke color for selected feature
-                    width: 2      // Thicker stroke to show selection
+                    width: 3 // Thicker stroke to show selection
                 })
             })
         })

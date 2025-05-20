@@ -25,6 +25,7 @@ var urlfp = "data/reef_passages/french_polynesia.geojson";
 var urlf = "data/reef_passages/PassesFiji.geojson";
 var urlnc = "data/reef_passages/new_caledonia.geojson";
 var urltransectmoorea = "data/_data_for_transects/transects_moorea.geojson";
+var pathtopics = "media/webmap/transects/";
 
 if(page == "mobile-page"){
     console.log("Page détectée :", page);
@@ -34,6 +35,7 @@ if(page == "mobile-page"){
     urlf = "../data/reef_passages/PassesFiji.geojson";
     urlnc = "../data/reef_passages/new_caledonia.geojson";
     urltransectmoorea = "../data/_data_for_transects/transects_moorea.geojson";
+    pathtopics = "../media/webmap/transects/";
 }
 
 function getColor(d) {
@@ -372,6 +374,7 @@ function after_init_map(){
             if (allowedLayers.includes(layerName)) {
                 console.log(layerName);
     
+                const imagePath = `${pathtopics}${feature.get('ID')}_transect.png`;
                 content = `
                     <div class="layer-content">
 
@@ -414,7 +417,7 @@ function after_init_map(){
 
                         <div style="max-width: 400px;">
                             <img 
-                            src="../media/webmap/transects/${feature.get('ID')}_transect.png"
+                            src="${imagePath}"
                             alt="Transect 432"
                             style="width: 100%; height: auto;"
                             onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<p style=text-align:center;><i>No transect available yet.</i></p>');"

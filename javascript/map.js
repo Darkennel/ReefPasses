@@ -24,6 +24,7 @@ var dotsize = 5;
 var urlfp = "data/reef_passages/french_polynesia.geojson";
 var urlf = "data/reef_passages/PassesFiji.geojson";
 var urlnc = "data/reef_passages/new_caledonia.geojson";
+var urltransectmoorea = "data/_data_for_transects/transects_moorea.geojson";
 
 if(page == "mobile-page"){
     console.log("Page détectée :", page);
@@ -32,6 +33,7 @@ if(page == "mobile-page"){
     urlfp = "../data/reef_passages/french_polynesia.geojson";
     urlf = "../data/reef_passages/PassesFiji.geojson";
     urlnc = "../data/reef_passages/new_caledonia.geojson";
+    urltransectmoorea = "../data/_data_for_transects/transects_moorea.geojson";
 }
 
 function getColor(d) {
@@ -41,6 +43,7 @@ function getColor(d) {
                 '#eeeee4'; // Undefined
 }
 
+// Basic type-defined style
 function style_rf(feature){
     return[
         new ol.style.Style({
@@ -58,10 +61,11 @@ function style_rf(feature){
     ]
 }
 
+// Style to highlight selected feature
 function selectedStyle_rf(feature) {
     return [
         new ol.style.Style({
-            image: new ol.style.Circle({
+                image: new ol.style.Circle({
                 radius: dotsize,
                 fill: new ol.style.Fill({
                     color: getColor(feature.get("Type")),
@@ -72,9 +76,67 @@ function selectedStyle_rf(feature) {
                 })
             })
         })
-    ];
+    ]
 }
 
+// Arrow-styled line for transects
+function transectStyle(feature) {
+    const geometry = feature.getGeometry();
+    let coordinates;
+
+    // Manage LineString and MultiLineString
+    if (geometry.getType() === 'LineString') {
+        coordinates = geometry.getCoordinates();
+    } else if (geometry.getType() === 'MultiLineString') {
+        coordinates = geometry.getCoordinates()[0]; // first line
+    } else {
+        return null; // no style
+    }
+
+    const styles = [];
+
+    // Main line style
+    styles.push(new ol.style.Style({
+        stroke: new ol.style.Stroke({
+            color: '#ffdc8a',
+            width: 2
+        })
+    }));
+
+    // Add tip style
+    if (coordinates.length >= 2) {
+        const start = coordinates[coordinates.length - 2];
+        const end = coordinates[coordinates.length - 1];
+        const dx = end[0] - start[0];
+        const dy = end[1] - start[1];
+        const rotation = Math.atan2(dy, dx);
+
+        // Arrow-styled tip
+        // styles.push(new ol.style.Style({
+        //     geometry: new ol.geom.Point(end),
+        //     image: new ol.style.RegularShape({
+        //         fill: new ol.style.Fill({ color: '#ff6600' }),
+        //         stroke: new ol.style.Stroke({ color: '#ffffff', width: 1 }),
+        //         points: 3,
+        //         radius: 10,
+        //         rotation: -rotation,
+        //         angle: Math.PI / 3
+        //     })
+        // }));
+
+        // Circle-styled tip -> more viable for now
+        styles.push(new ol.style.Style({
+            geometry: new ol.geom.Point(end),
+            image: new ol.style.Circle({
+                radius: 5,
+                fill: new ol.style.Fill({ color: '#ffdc8a' })
+            })
+        }));        
+
+    }
+
+    return styles;
+}
 
 // ---------- PROPERTIES
 // ----- French Polynesia
@@ -128,6 +190,25 @@ var layer_nc = new ol.layer.Vector({
 });
 // Set name to refer to it later
 layer_nc.set('name', 'newcaledonia');
+
+// ----- Moorea Transects
+
+var source_moorea_transects = new ol.source.Vector({
+    format : new ol.format.GeoJSON(),
+    url : urltransectmoorea
+});
+
+source_moorea_transects._title = "Transects: Moorea";
+source_moorea_transects._description = "Transects over Moorea (French Polynesia)";
+
+var layer_moorea_transects = new ol.layer.Vector({
+    source : source_moorea_transects,
+    style : transectStyle,
+    visible : false
+});
+// Set name to refer to it later
+layer_moorea_transects.set('name', 'mooreatransects');
+
 
 
 // -----------------------------------
@@ -358,8 +439,6 @@ function after_init_map(){
                     </div>
                 `;
 
-                console.log(media_content);
-
                 // Apply selected style to feature
                 selectedFeatureStyle(feature);
     
@@ -402,6 +481,7 @@ function after_init_map(){
     map.addLayer(bglayer_topo);
     map.addLayer(bglayer_osm);
     map.addLayer(bglayer_op);
+    map.addLayer(layer_moorea_transects);
     map.addLayer(labelLayer);
     map.addLayer(layer_fp);
     map.addLayer(layer_fiji);

@@ -41,7 +41,7 @@ if(page == "mobile-page"){
 function getColor(d) {
     return d == 'Lagoon' ? '#2a96a2' : // Lagoon
         d == 'Coastal' ? '#3b4e38' : // Coastal
-            d = 'Open Water' ? '#060f2e' : // Open Water
+            d == 'Open Water' ? '#060f2e' : // Open Water
                 '#eeeee4'; // Undefined
 }
 

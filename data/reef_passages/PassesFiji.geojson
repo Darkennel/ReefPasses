@@ -1,7 +1,7 @@
 {
 "type": "FeatureCollection",
 "name": "PassesFiji",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::3460" } },
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
 "features": [
 { "type": "Feature", "properties": { "Event": "SOCP-001", "Longitude": 178.3286799, "Latitude": -16.830916, "ID": 1, "Location": "Yadua (FJ)", "Type": "Lagoon", "Dist shore": 295.06056617208861, "w [m]": 35, "AUTHOR": "SAMUEL MARTIN", "AMBIGUOUS": null, "AMB_REASON": null, "NAME": null, "ARCHIPELAGO": null, "DESCRIPTION": null }, "geometry": { "type": "Point", "coordinates": [ 178.3286799, -16.830916 ] } },
 { "type": "Feature", "properties": { "Event": "SOCP-001", "Longitude": 178.3312221, "Latitude": -16.81393222, "ID": 2, "Location": "Yadua (FJ)", "Type": "Lagoon", "Dist shore": 677.18697225618371, "w [m]": 50, "AUTHOR": "SAMUEL MARTIN", "AMBIGUOUS": null, "AMB_REASON": null, "NAME": null, "ARCHIPELAGO": null, "DESCRIPTION": null }, "geometry": { "type": "Point", "coordinates": [ 178.3312221, -16.81393222 ] } },

@@ -1,7 +1,7 @@
 {
 "type": "FeatureCollection",
 "name": "new_caledonia",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::3163" } },
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
 "features": [
 { "type": "Feature", "properties": { "Event": "SOCP-005", "Longitude": 166.2521695, "Latitude": -22.35674939, "ID": 433, "Location": "Grande Terre", "Type": "Open Water", "Dist shore": 7038.7346791331793, "w [m]": 1500, "AUTHOR": "Nozik et al.", "AMBIGUOUS": "NO", "AMB_REASON": null, "NAME": "Passe de Dumbéa", "DESCRIPTION": null, "ARCHIPELAGO": "New-Caledonia (FR)" }, "geometry": { "type": "Point", "coordinates": [ 166.2521695, -22.35674939 ] } },
 { "type": "Feature", "properties": { "Event": "SOCP-005", "Longitude": 166.099257, "Latitude": -22.16970562, "ID": 434, "Location": "Grande Terre", "Type": "Open Water", "Dist shore": 5734.0345545719119, "w [m]": 1500, "AUTHOR": "Nozik et al.", "AMBIGUOUS": "NO", "AMB_REASON": null, "NAME": "Passe de Uitoé", "DESCRIPTION": null, "ARCHIPELAGO": "New-Caledonia (FR)" }, "geometry": { "type": "Point", "coordinates": [ 166.099257, -22.16970562 ] } },

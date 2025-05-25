@@ -24,7 +24,7 @@ var dotsize = 5;
 var urlfp = "data/reef_passages/french_polynesia.geojson";
 var urlf = "data/reef_passages/PassesFiji.geojson";
 var urlnc = "data/reef_passages/new_caledonia.geojson";
-var urltransectmoorea = "data/_data_for_transects/transects_moorea.geojson";
+var urltransectmoorea = "data/data_for_transects/transects_moorea.geojson";
 var pathtopics = "media/webmap/transects/";
 
 if(page == "mobile-page"){
@@ -34,7 +34,7 @@ if(page == "mobile-page"){
     urlfp = "../data/reef_passages/french_polynesia.geojson";
     urlf = "../data/reef_passages/PassesFiji.geojson";
     urlnc = "../data/reef_passages/new_caledonia.geojson";
-    urltransectmoorea = "../data/_data_for_transects/transects_moorea.geojson";
+    urltransectmoorea = "../data/data_for_transects/transects_moorea.geojson";
     pathtopics = "../media/webmap/transects/";
 }
 
@@ -113,7 +113,7 @@ function transectStyle(feature) {
         const end = coordinates[coordinates.length - 1];
         const dx = end[0] - start[0];
         const dy = end[1] - start[1];
-        const rotation = Math.atan2(dy, dx);
+        //const rotation = Math.atan2(dy, dx);
 
         // Arrow-styled tip
         // styles.push(new ol.style.Style({
